@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculadora de Média Uber</title>
+  <style>
+    * { box-sizing: border-box; font-family: Arial, Helvetica, sans-serif; }
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #000000, #1f1f1f);
+      color: #fff;
+      margin: 0;
+    }
+    .card {
+      background: #111;
+      padding: 24px;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 440px;
+      box-shadow: 0 20px 40px rgba(0,0,0,.5);
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 6px;
+      font-size: 1.6rem;
+    }
+    p.subtitle {
+      text-align: center;
+      color: #aaa;
+      margin-bottom: 18px;
+      font-size: .9rem;
+    }
+    .meta {
+      text-align: center;
+      background: #1db954;
+      color: #000;
+      padding: 8px;
+      border-radius: 10px;
+      margin-bottom: 18px;
+      font-weight: bold;
+    }
+    .row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      margin-bottom: 12px;
+      align-items: center;
+    }
+    label { font-size: .95rem; }
+    input {
+      width: 90px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+      font-size: .95rem;
+      text-align: center;
+    }
+    button {
+      width: 100%;
+      margin-top: 16px;
+      padding: 12px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: bold;
+      background: #1db954;
+      color: #000;
+    }
+    button:hover { opacity: .9; }
+    .result {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 1.05rem;
+      line-height: 1.4;
+    }
+    .highlight {
+      font-size: 1.3rem;
+      font-weight: bold;
+      margin-top: 6px;
+    }
+    .footer {
+      text-align: center;
+      margin-top: 16px;
+      font-size: .75rem;
+      color: #777;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Calculadora de Avaliações</h1>
+    <p class="subtitle">Quantas 5⭐ são necessárias?</p>
+
+    <div class="meta">Meta de média: 4.63 ⭐</div>
+
+    <div class="row">
+      <label>⭐ 5 estrelas</label>
+      <input type="number" min="0" id="s5" value="0" />
+    </div>
+    <div class="row">
+      <label>⭐ 4 estrelas</label>
+      <input type="number" min="0" id="s4" value="0" />
+    </div>
+    <div class="row">
+      <label>⭐ 3 estrelas</label>
+      <input type="number" min="0" id="s3" value="0" />
+    </div>
+    <div class="row">
+      <label>⭐ 2 estrelas</label>
+      <input type="number" min="0" id="s2" value="0" />
+    </div>
+    <div class="row">
+      <label>⭐ 1 estrela</label>
+      <input type="number" min="0" id="s1" value="0" />
+    </div>
+
+    <button onclick="calcular()">Calcular</button>
+
+    <div class="result" id="resultado"></div>
+
+    <div class="footer">Simulador de média e recuperação de avaliação</div>
+  </div>
+
+  <script>
+    const META = 4.63;
+
+    function calcular() {
+      const s5 = Number(document.getElementById('s5').value);
+      const s4 = Number(document.getElementById('s4').value);
+      const s3 = Number(document.getElementById('s3').value);
+      const s2 = Number(document.getElementById('s2').value);
+      const s1 = Number(document.getElementById('s1').value);
+
+      const total = s5 + s4 + s3 + s2 + s1;
+      const soma = s5*5 + s4*4 + s3*3 + s2*2 + s1*1;
+
+      if (total === 0) {
+        document.getElementById('resultado').innerHTML = 'Informe ao menos uma avaliação.';
+        return;
+      }
+
+      const mediaAtual = soma / total;
+
+      let cincoNecessarios = 0;
+      let novaMedia = mediaAtual;
+
+      if (mediaAtual < META) {
+        while (novaMedia < META) {
+          cincoNecessarios++;
+          novaMedia = (soma + cincoNecessarios * 5) / (total + cincoNecessarios);
+        }
+      }
+
+      document.getElementById('resultado').innerHTML = `
+        <div>Média atual:</div>
+        <div class="highlight">${mediaAtual.toFixed(2)} ⭐</div>
+        <br>
+        ${mediaAtual >= META 
+          ? '🎉 Você já atingiu a média mínima de 4.60!'
+          : `Você precisa de <strong>${cincoNecessarios}</strong> avaliações 5⭐ seguidas para atingir a média 4.63.`}
+      `;
+    }
+  </script>
+</body>
+</html>
